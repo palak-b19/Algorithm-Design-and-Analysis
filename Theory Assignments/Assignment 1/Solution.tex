@@ -1,0 +1,217 @@
+\documentclass[8pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{paralist}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=black
+    }
+
+\title{\vspace{-3em}Theory Assignment-1: ADA Winter-2024}
+\author{Palak Bhardwaj(2022344) \phantom{fddvdssvs}Yashovardhan Singhal(2022591)} 
+    
+
+\date{January 28, 2024}
+\begin{document}
+\maketitle
+
+% \vspace{-0.5em}
+
+\section{Preprocessing}
+
+
+
+\fontsize{12}{8}\selectfont Preprocessing is not applicable.
+
+ \vspace{-1em}
+
+% Your preprocessing steps go here
+
+\section{Algorithm Description}
+
+\vspace{-0.6em}
+
+\textbf{Input}
+
+\vspace{-0.5em}
+
+\hspace{1em} \begin{enumerate}
+    \item Three sorted arrays arr1, arr2, arr3 of same length n.
+    \item The length n.
+    \item An integer k representing the position of the desired element.
+\end{enumerate}
+
+\hspace{-1.5em}\textbf{Algorithm}
+
+
+\begin{enumerate}
+
+\item Initialize start as the minimum value among the 0th index (first) elements of each of the three arrays and end as the maximum value among the last index elements of each of the three arrays.
+
+\item Initialize a while loop that iterates while start is less than or equal to end.
+
+\item Inside the loop, set mid as the midpoint of start and end, calculated as start + (end-start)/2.
+
+\item For each array, store the count of elements less than or equal to mid in a separate variable. This count is obtained by invoking a helper function, which performs a binary search on the array.
+
+\item The helper function takes the array, its length, and the mid calculated as input. Within the helper function, a new start variable is initialized to 0 and end variable is initialized to the size of the array minus 1.
+
+\item In the helper function, initiate a while loop that iterates while start is less than or equal to end.
+
+\item Inside the loop, initialize a new mid as the midpoint of start and end which were initialised in this helper function. If the element at the mid index of the array is less than or equal to the target(passed as mid from the main function), set start as mid + 1, else set end as mid - 1 (update the mid initialised in the helper function).
+
+\item After the while loop in the helper function concludes, return the value of start, representing the count of elements less than or equal to the target in the array.
+
+\item Repeat steps 4-8 for each of the three arrays, obtaining three separate counts for 
+each array.
+
+\item Compute the total count (variable name totalCount) as the sum of the counts obtained from the three arrays calculated via the helper function above.
+
+\item If totalCount is less than k, update low to mid + 1, in order to search for a higher answer(go right in the search space).
+
+\item Otherwise, update high to mid - 1, in order to search for a lower answer( go left in the search space).
+
+\item After the while loop breaks, the start value is returned, representing the kth smallest element.
+
+\end{enumerate}
+
+\vspace{-1em}
+% Describe your algorithm here
+
+\section{Recurrence Relation}
+    \fontsize{12}{8}\selectfont Recurrence relation is not applicable since it is an iterative code.
+% Provide the recursive relation of your algorithm
+
+\section{Complexity Analysis}
+
+\begin{itemize}
+    \item \textbf{Binary Search:}
+    \begin{itemize}
+        \item \texttt{countLessEqual} performs binary search on a sorted array with a time complexity of $O(\log n)$.
+        \item \texttt{kthelement} uses three binary searches iteratively for each array.
+    \end{itemize}
+    
+    \item \textbf{Overall Time Complexity:}
+    \begin{itemize}
+        \item The main loop in \texttt{kthelement} has a combined time complexity of $O(\log n \cdot \log n)$.
+        \item This complexity arises from the nested nature of binary searches on arrays of size $n$.
+    \end{itemize}
+\end{itemize}
+
+% Analyze the time and space complexity of your algorithm
+
+\section{Pseudocode}
+\begin{algorithm}
+\caption{Finding the k-th Smallest Element in Union of Three Sorted Arrays}
+\begin{algorithmic}[1]
+
+\Function{CountLessEqual}{$arr, len, target$}
+    \State $start \gets 0$
+    \State $end \gets len - 1$
+    
+    \While{$start \leq end$}
+        \State $mid \gets start + \frac{(end - start)}{2}$
+        
+        \If{$arr[mid] \leq target$}
+            \State $start \gets mid + 1$
+        \Else
+            \State $end \gets mid - 1$
+        \EndIf
+    \EndWhile
+    
+    \State \Return $start$
+\EndFunction
+
+\Function{KthSmallest}{$arr1, arr2, arr3, n, k$}
+    \State $start \gets \min(arr1[0], \min(arr2[0], arr3[0]))$
+    \State $end \gets \max(arr1[n-1], \max(arr2[n-1], arr3[n-1]))$
+    
+    \While{$start \leq end$}
+        \State $mid \gets start + \frac{(end - start)}{2}$
+        
+        \State $count1 \gets$ \Call{CountLessEqual}{$arr1, n, mid$}
+        \State $count2 \gets$ \Call{CountLessEqual}{$arr2, n, mid$}
+        \State $count3 \gets$ \Call{CountLessEqual}{$arr3, n, mid$}
+        
+        \State $totalCount \gets count1 + count2 + count3$
+        
+        \If{$totalCount < k$}
+            \State $start \gets mid + 1$
+        \Else
+            \State $end \gets mid - 1$
+        \EndIf
+    \EndWhile
+    
+    \State \Return $start$
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
+
+
+\section{Proof of Correctness}
+% Provide the proof of correctness for your algorithm
+
+
+To prove the correctness of the given algorithm, we can use a proof by \textbf{contradiction}. The algorithm aims to find the k-th smallest element in the union of three sorted arrays. We can show that if the algorithm produces a result, that result is indeed the k-th smallest element, i.e. the result would not be greater or smaller than k.
+
+\vspace{0.5em}
+
+\textbf{Claim:} If the algorithm returns a value result, then result is the k-th smallest element in the union of the three sorted arrays.
+\vspace{0.5em}
+Proof:
+
+\textbf{Assumption:} Assume that the algorithm returns a value as result, but result is not the k-th smallest element.
+\vspace{0.5em}
+
+\textbf{Contradiction:} We will show that this assumption leads to a contradiction.
+
+\begin{enumerate}
+        \item \textbf{Definition of result:} The algorithm terminates when start is no longer less than or equal to end. At this point, start represents the k-th smallest element in the union of three sorted arrays.
+        \item \textbf{Assumption Contradicts the Definition:} If result is not the k-th smallest element, it means that either result is smaller than the k-th smallest element or greater than the k-th smallest element.
+
+        \vspace{0.5em}
+
+        This would lead to two cases - 
+
+        \begin{enumerate}
+            \item \textbf{Case 1:} result $<$ k-th smallest element: If result is smaller than the k-th smallest element, it contradicts the fact that start is the k-th smallest element. This is because the algorithm updates start to be mid + 1 when totalCount $<$ k.
+            \item \textbf{Case 2:} result $>$ k-th smallest element: If result is greater than the k-th smallest element, it contradicts the fact that end is the k-th smallest element. This is because the algorithm updates end to be mid - 1 when totalCount $>$= k.
+        \end{enumerate}
+
+        \item \textbf{Conclusion:} In either case, our assumption that result is not the k-th smallest element leads to a contradiction. Therefore, the algorithm must correctly return the k-th smallest element in the union of three sorted arrays.
+
+\end{enumerate}
+
+Another \textbf{general way }of looking at this can be -
+
+The initial search space includes the entire union of three arrays, and the algorithm correctly initializes the pointers.
+
+At each iteration, the algorithm refines the search space based on the count of elements less than or equal to the mid value. It is ensured that the k-th smallest element is always within the search space.
+
+The algorithm terminates when the search space is reduced to a single candidate element, and this element is guaranteed to be the k-th smallest element.
+
+\section{Assumptions} 
+
+\begin{enumerate} 
+    \item Indexing is 0th based, first element is represented by 0th index.
+    \item There are at least k elements in the union of the three arrays.
+    \item The input arrays are sorted.
+    \item The input arrays are not empty.
+    \item The values in the arrays are integers.
+    \item The elements in the arrays are distinct, the duplicates are treated as distinct elements.
+\end{enumerate}
+
+\section{Resources} 
+\href{https://www.youtube.com/watch?v=YJeoQBevNVo}{Link1}
+\href{https://youtu.be/D1oDwWCq50g?si=zRKa1dsZRJ6jetfG}{Link2}
+
+\end{document}
