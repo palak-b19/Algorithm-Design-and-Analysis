@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+bool subsequence_find(int sum,vector<ll> input ,int size, int n,  int index,int size_sub) {
+    vector<int> subsequences_include = {};
+ 
+    if(sum % n == 0 && size_sub>=1){
+ 
+        return true;
+ 
+    }
+    if(index>=size){
+        return false ;
+    }
+    
+    int recCall1 =subsequence_find(sum+input[index],input, size,n, index+1,size_sub+1);
+    int recCall2 = subsequence_find(sum,input, size, n,index+1 ,size_sub);
+ 
+    return recCall1||recCall2;
+ 
+}
+ 
+int main() {
+    ll m, n, a, no_of_testcases;
+    ll sum;
+    cin >> no_of_testcases;
+ 
+    for (int i = 0; i < no_of_testcases; i++) {
+        cin >> m >> n;
+        vector<ll> vector1;
+        bool flag_inner=false;
+        bool flag_outer = false;
+ 
+ 
+        for (ll j = 0; j < m; j++) {
+            cin >> a;
+            vector1.push_back(a);
+        }
+ 
+        for (int i = 0; i < m ; i++) {
+            flag_outer=true;
+            int element = vector1[i];
+            vector1.erase(vector1.begin() + i);
+ 
+ 
+ 
+            bool ans =subsequence_find(0, vector1 ,vector1.size(),n,0,0);
+            if(!ans){
+                flag_outer=false;
+                break;
+            }
+ 
+            vector1.insert(vector1.begin() + i,element);
+  
+               
+        }
+        if(flag_outer){
+            cout << "YES" << endl;
+        }
+        else{
+            cout << "NO" << endl;
+        }
+       
+    }
+     
+ 
+    return 0;
+}
