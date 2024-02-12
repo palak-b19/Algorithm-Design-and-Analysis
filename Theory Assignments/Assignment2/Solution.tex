@@ -1,0 +1,299 @@
+\documentclass[8pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{paralist}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=black
+    }
+
+\title{\vspace{-3em}Theory Assignment-2: ADA Winter-2024}
+\author{Palak Bhardwaj(2022344) \phantom{fddvdssvs}Yashovardhan Singhal(2022591)} 
+    
+
+\date{February 11, 2024}
+\begin{document}
+\maketitle
+
+% \vspace{-0.5em}
+
+\section{Pre-Processing}
+In the provided algorithm, there isn't explicit preprocessing involved before executing the main part of the algorithm.
+\newline
+However, we initalised a DP Table to store the values of calculated subproblems in order to implement memorization, dp with dimensions \texttt{(n+1) x 4 x 4} is initialized with all values set to -1 before invoking the recursive function chickened.
+\newline
+\textbf{Input Format:} An array A[1, 2, ..., n] representing the numbers written at the door of each booth and The size n of the array.
+
+\section{Algorithm Description}
+
+
+Here's a step-by-step breakdown of the algorithm implemented:
+
+\begin{enumerate}
+    \item \textbf{Function Definition}: Define a function \texttt{chickend} that takes five parameters: \texttt{index} (current booth index), \texttt{r} (number of consecutive 'RING's), \texttt{d} (number of consecutive 'DING's), \texttt{arr} (vector representing rewards/penalties at each booth), and \texttt{dp} (3D vector for memoization).
+    
+    \item \textbf{Base Case}: If \texttt{index} equals the size of the \texttt{arr} vector, return 0, indicating that Mr. Fox has reached the end of the obstacle course.
+    
+    \item \textbf{Memoization Check}:
+    \begin{itemize}
+        \item Check if the memoization value for the current parameters (\texttt{index}, \texttt{r}, \texttt{d}) is already calculated. If yes, return the memoized value.
+    \end{itemize}
+    
+    \item \textbf{Recursive Cases}:
+    \begin{itemize}
+        \item If \texttt{d} equals 3 (maximum consecutive 'DING's reached), recursively call \texttt{chickend} with \texttt{index+1}, \texttt{r=1}, \texttt{d=0}, \texttt{arr}, and \texttt{dp}, and add the current booth's reward/penalty (\texttt{arr[index]}).
+        \item If \texttt{r} equals 3 (maximum consecutive 'RING's reached), recursively call \texttt{chickend} with \texttt{index+1}, \texttt{r=0}, \texttt{d=1}, \texttt{arr}, and \texttt{dp}, and subtract the current booth's reward/penalty (\texttt{arr[index]}).
+        \item Otherwise, recursively call \texttt{chickend} twice:
+        \begin{itemize}
+            \item Increment \texttt{r} by 1 and call with \texttt{d=0}.
+            \item Increment \texttt{d} by 1 and call with \texttt{r=0}.
+            \item Return the maximum value obtained by adding or subtracting the current booth's reward/penalty.
+        \end{itemize}
+    \end{itemize}
+    
+\end{enumerate}
+
+This algorithm recursively explores different paths through the obstacle course, considering the maximum number of chickens Mr. Fox can earn based on the sequence of 'RING's and 'DING's he utters. The memoization array \texttt{dp} is used to store and re-use previously computed results, optimizing the algorithm by avoiding redundant calculations.
+
+
+
+
+% Recursive Cases:
+
+% If d equals 3 (maximum consecutive 'DING's reached), recursively call chickend with index+1, r=1, d=0, and arr, and add the current booth's reward/penalty (arr[index]).
+% If r equals 3 (maximum consecutive 'RING's reached), recursively call chickend with index+1, r=0, d=1, and arr, and subtract the current booth's reward/penalty (arr[index]).
+% Otherwise, recursively call chickend twice:
+% Increment r by 1 and call with d=0.
+% Increment d by 1 and call with r=0.
+% Return the maximum value obtained by adding or subtracting the current booth's reward/penalty.
+% Main Function:
+
+% Initialize an integer n to store the number of booths.
+% Read the value of n from the input.
+% Initialize a vector a containing rewards/penalties for each booth.
+% Initialize a 3D array dp to store memoization values, setting all elements to -1.
+% Call the chickend function with initial parameters index=0, r=0, d=0, and arr=a, and store the result in ans.
+% Output the value of ans.
+
+
+
+\section{Subproblem}
+
+\textbf{Using a Top-Down Approach:} The subproblem addressed by the algorithm is to determine the maximum number of chickens that Mr. Fox can earn while navigating the obstacle course. This involves considering the current booth index, the consecutive occurrences of 'RING's (denoted by $r$), the consecutive occurrences of 'DING's (denoted by $d$), the array representing rewards/penalties at each booth, and the previously computed solutions for subproblems stored in the $dp$ array.
+
+The subproblem is recursively defined as follows: Let 
+\newline
+\newline
+\phantom{fddvddjndnjdnjhjddndjnsndjnjdjdssvs}\textit{\textbf{$chickend(index, r, d, arr, dp)$} }
+\newline
+\newline
+represent the maximum number of chickens that Mr. Fox can earn by starting from the $index$-th booth, with $r$ consecutive 'RING's and $d$ consecutive 'DING's so far, utilizing the rewards/penalties array $arr$, and leveraging the previously computed solutions stored in the $dp$ array.
+
+
+% \text{chickend}(index, r, d, \text{arr}) = \begin{cases} 
+% 0 \phantom{5434557542643534564}, & \text{if } \text{index} = \text{arr.size()} \\ 
+% \max\left( 
+% \begin{array}{@{}l@{}}
+% \text{chickend}(index + 1, r + 1, 0, \text{arr}) + \text{arr}[index], \\ 
+% \text{chickend}(index + 1, 0, d + 1, \text{arr}) - \text{arr}[index] 
+% \end{array} 
+% \right), & \text{otherwise}
+% \end{cases}
+\section{Recurrence Relation}
+
+   The recurrence relation for the \texttt{chickend} function can be expressed as follows:
+
+\[
+\text{chickend}(index, r, d, \text{arr}) = 
+\begin{cases} 
+    0, & \text{if } \text{index} = \text{arr.size()} \\ 
+    \max\left( 
+        \begin{array}{@{}l@{}}
+            \text{chickend}(index + 1, r + 1, 0, \text{arr}) + \text{arr}[index], \\ 
+            \text{chickend}(index + 1, 0, d + 1, \text{arr}) - \text{arr}[index] 
+        \end{array} 
+    \right), & \text{otherwise}
+\end{cases}
+\]
+
+
+
+\textbf{Base Case:}
+\newline
+\newline
+\[
+\text{if } (index == n) \{
+    \text{ return } 0;
+\}
+\]
+
+
+\section{Final Subproblem}
+The final subproblem in the dynamic programming array $dp$ would be represented as
+\newline
+\newline
+\phantom{fddvddjndnjdnjhjddndjnsndjnfnjvjfnvjfnjdjdssvs}\textit{$dp[n][r][d]$} 
+\newline
+\newline
+where:
+- $n$ is the size of the $arr$ vector,
+- $r$ represents the number of Consecutive Rings where r$=$3 is the maximum number of consecutive Rings possible
+- $d$ represents the number of Consecutive Dings where d$=$3 is the maximum number of consecutive Dings possible
+
+\vspace{-0.6em}
+\section{Pseudo-Code}
+
+\begin{algorithmic}[1]
+\Function{Chickend}{$\textit{index}, \textit{r}, \textit{d}, \textit{arr}, \textit{dp}$}
+\If{$\textit{index} = \text{arr.size()}$}
+\State \Return{$0$}
+\Else
+\If{$\textit{dp}[\textit{index}][\textit{r}][\textit{d}] \neq -1$}
+\State \Return{$\textit{dp}[\textit{index}][\textit{r}][\textit{d}]$}
+\EndIf
+\If{$\textit{d} = 3$}
+\State \Return{$\text{Chickend}(\textit{index} + 1, 1, 0, \textit{arr}, \textit{dp}) + \textit{arr}[\textit{index}]$}
+\EndIf
+\If{$\textit{r} = 3$}
+\State \Return{$\text{Chickend}(\textit{index} + 1, 0, 1, \textit{arr}, \textit{dp}) - \textit{arr}[\textit{index}]$}
+\EndIf
+\State $\textit{dp}[\textit{index}][\textit{r}][\textit{d}] \gets \max($
+\State \hspace{\algorithmicindent} $\text{Chickend}(\textit{index} + 1, \textit{r} + 1, 0, \textit{arr}, \textit{dp}) + \textit{arr}[\textit{index}],$
+\State \hspace{\algorithmicindent} $\text{Chickend}(\textit{index} + 1, 0, \textit{d} + 1, \textit{arr}, \textit{dp}) - \textit{arr}[\textit{index}])$
+\State \Return{$\textit{dp}[\textit{index}][\textit{r}][\textit{d}]$}
+\EndIf
+\EndFunction
+\end{algorithmic}
+
+\section{Space Complexity Analysis}
+
+The space complexity of the \texttt{chickend} function can be divided into two components:
+
+1. \textbf{Function Stack Space:}
+   \begin{itemize}
+       \item Due to the recursive nature of the \texttt{chickend} function, space on the call stack is allocated for each recursive call.
+       \item The maximum depth of recursion is determined by the size of the input vector $\texttt{arr}$.
+       \item Therefore, the space complexity for the function stack is \textbf{$O(n)$}, where $n$ represents the size of the $\texttt{arr}$ vector.
+   \end{itemize}
+
+2. \textbf{Dynamic Programming Memoization:}
+   \begin{itemize}
+       \item The function utilizes a memoization table $\texttt{dp}$, which is a 3D vector with dimensions $\texttt{arr.size()} \times 4 \times 4$.
+       \item The space complexity for this memoization table is proportional to the size of the input vector $\texttt{arr}$, resulting in\textbf{ $O(n)$ }space requirements.
+   \end{itemize}
+
+Hence, the total space complexity of the \texttt{chickend} function, accounting for both the function stack space and the dynamic programming memorization is O(n) + O(n) = O(n), indicating that the total space complexity of the chickend function is \textbf{O(n).}
+
+
+
+
+
+
+
+\section{Time Complexity}
+% Provide the proof of correctness for your algorithm
+
+
+\begin{enumerate}
+    \item \textbf{Subproblem Identification}:
+    \begin{itemize}
+        \item Define a function \( T(i, r, d) \) representing the time complexity of solving a subproblem with parameters \( (i, r, d) \).
+        \item \( i \) denotes the index, \( r \) denotes the count of consecutive elements selected from the beginning, and \( d \) denotes the count of consecutive elements not selected from the beginning.
+        \item With \( r \) and \( d \) bounded by 4, the total number of possible combinations of \( (i, r, d) \) is \( n \times 4 \times 4 \), where \( n \) is the size of the input array \( \text{arr} \).
+    \end{itemize}
+    
+    \item \textbf{Memoization}:
+    \begin{itemize}
+        \item Utilize memoization to store the solutions of previously computed subproblems.
+        \item Retrieving a solution from the memoization table takes constant time (\( O(1) \)).
+    \end{itemize}
+    
+    \item \textbf{Recurrence Relation}:
+    \begin{itemize}
+        \item Define a recurrence relation for \( T(i, r, d) \) based on the algorithm's recursive calls.
+        \item If \( \text{dp}[i][r][d] \) already contains a value, then \( T(i, r, d) = O(1) \).
+        \item Otherwise, the algorithm makes recursive calls to subproblems, leading to further exploration.
+    \end{itemize}
+    
+    \item \textbf{Overall Time Complexity}:
+    \begin{itemize}
+        \item Consider the number of distinct subproblems that need to be solved.
+        \item The maximum number of distinct subproblems is \( n \times 4 \times 4 \).
+        \item Each subproblem is solved only once due to memoization.
+        \item Therefore, the overall time complexity can be derived by summing up the time complexities of all distinct subproblems.
+    \end{itemize}
+    
+    \item \textbf{Simplify}:
+    \begin{itemize}
+        \item Since each subproblem is solved once, the time complexity of solving all distinct subproblems is \textbf{\( O(n) \)}.
+        \item Hence, the overall time complexity of the algorithm using memoization is \textbf{\( O(n) \)}.
+    \end{itemize}
+\end{enumerate}
+
+
+\section{Assumptions} 
+
+
+The analysis of the algorithm's time complexity is based on the following assumptions:
+
+\begin{enumerate}
+    \item The input array \( \text{arr} \) is of size \( n \).
+    \item The parameters \( r \) and \( d \) are bounded by 4, i.e., \( 0 \leq r, d \leq 3 \).
+    \item The memoization table \( \text{dp} \) is used to store and retrieve solutions of previously computed subproblems in constant time.
+    \item Recursive calls to subproblems are made based on the recurrence relation, with each subproblem being solved only once due to memoization.
+\end{enumerate}
+
+\section{Proof of Correctness}
+
+Since the algorithm uses dp, there isn't an explicit requirement for a proof of correctness but here is a general proof,
+
+
+\subsubsection{Base Case}
+
+When the index equals the size of the input array (\( \text{index} = \text{arr.size()} \)), the algorithm correctly returns 0. This is because there are no more booths to traverse.
+
+\subsubsection{Recurrence Relation}
+
+
+\textbf{Base Case (\( n = 1 \)):} 
+For the base case, consider the scenario where there is only one booth (\( n = 1 \)). In this case, the algorithm computes the maximum reward/penalty for this single booth based on the constraints of consecutive 'RING's and 'DING's. Since there are no preceding booths, the algorithm correctly handles this case by returning the reward/penalty of the single booth.
+
+\textbf{Inductive Step (\( n > 1 \)):}
+Assume that the algorithm correctly computes the maximum number of chickens for subproblems of size \( n - 1 \). We will prove that it also correctly computes the maximum number of chickens for subproblems of size \( n \).
+
+Let's consider a subproblem of size \( n \). The algorithm considers all possible cases for the current booth:
+
+\begin{itemize}
+    \item If the maximum consecutive 'DING's (\( d \)) has been reached, the algorithm correctly moves to the next booth with \( r = 1 \) and \( d = 0 \), ensuring that Mr. Fox starts counting consecutive 'RING's again from the next booth.
+    \item If the maximum consecutive 'RING's (\( r \)) has been reached, the algorithm correctly moves to the next booth with \( r = 0 \) and \( d = 1 \), ensuring that Mr. Fox starts counting consecutive 'DING's from the next booth.
+    \item Otherwise, the algorithm explores both possibilities: 
+        \begin{itemize}
+            \item Incrementing \( r \) by 1 and moving to the next booth with \( d = 0 \).
+            \item Incrementing \( d \) by 1 and moving to the next booth with \( r = 0 \).
+        \end{itemize}
+    The algorithm then selects the maximum reward/penalty from these two possibilities, ensuring that the maximum number of chickens is computed accurately for the current booth.
+\end{itemize}
+
+By establishing the base case and demonstrating that the algorithm correctly handles subproblems of size \( n \), assuming it works for subproblems of size \( n - 1 \), we can conclude that the algorithm computes the maximum number of chickens accurately for all subproblems of size \( n \).
+
+Hence, the algorithm is correct.
+
+
+
+
+\section{Resources} 
+Jeff Erickson (Book)
+\newline
+\href{https://www.youtube.com/watch?v=tyB0ztf0DNY}{DP series by Striver Link 1}
+\newline
+\href{https://www.youtube.com/watch?v=QGfn7JeXK54}{DP series by Striver Link 2}
+
+\end{document}
